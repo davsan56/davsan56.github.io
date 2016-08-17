@@ -1,0 +1,144 @@
+html {
+    padding: 20px;
+}
+
+#header {
+    margin-top: 0px !important;
+}
+
+#title {
+    display: inline-block;
+    margin-right: 20px;
+}
+
+#enemy {
+    text-align: left;
+}
+
+#info {
+    text-align: center;
+}
+
+#my-top-nav {
+    margin-right: 10px;
+}
+
+.no-border {
+    border: 0 !important;
+}
+
+#enemy-top-nav {
+    margin-left: 51px;
+}
+
+#enemy-side-nav {
+    width: 45px;
+}
+
+.top-nav {
+    height: 42px;
+    width: 42px;
+    position: relative;
+    display: inline-block;
+    margin: 7px 0 0 7px;
+    border: 1px solid black; 
+    border-bottom: 0;   
+    text-align: center;
+    line-height: 2.6;
+}
+
+#enemy-side-nav {
+    display: inline-block;
+}
+
+#my-side-nav {
+    float: right;
+    width: 49px;
+    padding-top: 3px;
+}
+
+.side-nav {
+    height: 42px;
+    width: 42px;
+    display: block;
+    margin: 7px 0 0 7px;
+    border: 1px solid black; 
+    border-right: 0;   
+    text-align: center;
+    line-height: 2.6;    
+}
+
+#enemyBoard {
+    height: 500px;
+    width: 500px;
+    border: 1px solid black;
+    margin: 0;
+    background-color: deepskyblue;
+    display: inline-block;
+}
+
+.enemyBox {
+    height: 42px;
+    width: 42px;
+    position: relative;
+    display: inline-block;
+    margin: 7px 0 0 7px;
+    border: 1px solid black;    
+    text-align: center;
+    line-height: 2.6;
+    color: white;
+    cursor: pointer;
+}
+
+#yourBoard {
+    height: 500px;
+    width: 500px;
+    border: 1px solid black;
+    margin: 0;
+    background-color: deepskyblue;
+}
+
+.myBox {
+    height: 42px;
+    width: 42px;
+    background-color: gray;
+    position: relative;
+    display: inline-block;
+    margin: 7px 0 0 7px;
+    border: 1px solid black;
+    text-align: center;
+    line-height: 2.6;
+    color: white;
+    cursor: pointer;
+}
+
+#you {
+    text-align: right;
+    clear: both;
+    line-height: 60px;
+}
+
+.inline {
+    display: inline-block;
+    margin: 1px;
+}
+
+.red {
+    background-color: red;
+}
+
+.blue {
+    background-color: dodgerblue;
+}
+
+.green {
+    background-color: green;
+}
+
+.black {
+    background-color: black;
+}
+
+.big {
+    font-size: 72px;
+}
