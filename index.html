@@ -36,7 +36,7 @@
       <div id="info" class="row">
         <div class="col-md-2">
           <h4>You've found</h3>
-          <h1 class="big"><sup>{{started || finished ? num - enemyLocations.length : 0}}</sup>&frasl;<sub>{{num || 0}}</sub></h3>
+          <h1 class="big"><sup>{{playerHit}}</sup>&frasl;<sub>{{num}}</sub></h3>
           <h4>ships</h3>
         </div>
         <div id="info" class="col-md-8">
@@ -44,7 +44,7 @@
         </div>
         <div class="col-md-2">
           <h4>The enemy found</h3>
-          <h1 class="big"><sup>{{started || finished ? num - myLocations.length : 0}}</sup>&frasl;<sub>{{num || 0}}</sub></h3>
+          <h1 class="big"><sup>{{enemyHit}}</sup>&frasl;<sub>{{num || 0}}</sub></h3>
           <h4>ships</h3>
         </div>
       </div>
