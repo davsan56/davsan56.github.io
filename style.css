@@ -15,8 +15,13 @@ html {
     text-align: left;
 }
 
+.score h4, h1 {
+    display: inline;
+}
+
 #info {
     text-align: center;
+    height: 97px;
 }
 
 #my-top-nav {
