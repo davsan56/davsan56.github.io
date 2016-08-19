@@ -22,6 +22,9 @@ app.controller("myCtrl", function ($scope) {
     $scope.possibleLocations = [];
     var currentShip = 0;
 
+    var foundShip = [];
+    $scope.easyMode = false;
+
     $scope.enemyHit = 0;
     $scope.playerHit = 0;
 
@@ -46,6 +49,8 @@ app.controller("myCtrl", function ($scope) {
         6: []
     };
     $scope.enemyTotalLocations = [];
+
+    var color = 0;
 
     // Holds the information for each of the ships
     var ships = {
@@ -75,7 +80,6 @@ app.controller("myCtrl", function ($scope) {
     }
     
     // Picks random enemy locations
-    // TODO: Make it so it picks all 7 ships
     $scope.initialize = function() {
         for (var i = 0; i < Object.keys(ships).length; i++) {
             $scope.length = ships[Object.keys(ships)[i]];
@@ -158,7 +162,7 @@ app.controller("myCtrl", function ($scope) {
                     $scope.myLocations[currentShip].push(id);
                     $scope.myTotalLocations.push(id);
                     $scope.shipLocations.push(id);
-                    $scope.myBoard[id].backgroundColor = "black";
+                    $scope.myBoard[id].backgroundColor = "#" + color.toString().repeat(6);
                     $scope.blocksLeft--;
                     updatePossibleLocations(false);
                 } else {
@@ -166,9 +170,10 @@ app.controller("myCtrl", function ($scope) {
                         $scope.myLocations[currentShip].push(id);
                         $scope.myTotalLocations.push(id);
                         $scope.shipLocations.push(id);
-                        $scope.myBoard[id].backgroundColor = "black";
+                        $scope.myBoard[id].backgroundColor = "#" + color.toString().repeat(6);
                         $scope.blocksLeft--;
                         updatePossibleLocations(false);
+                        color += 2;
                     } else {
                         addNewMessage("Invalid location. Pick again.");
                     }
@@ -179,40 +184,109 @@ app.controller("myCtrl", function ($scope) {
         }
     }
 
+    // This method choices a random location for the computer to pick
+    // TODO: Add in some sort of logic so when the computer guesses a correct location, it guesses around the spot, randomly
+    var computerGuess = function() {
+        if (foundShip.length == 0 || $scope.easyMode) {
+            // take random guesses
+            var x = Math.floor((Math.random() * 100));
+            while ($scope.guessedLocations.indexOf(x) != -1) {
+               x = Math.floor((Math.random() * 100));
+            }
+            $scope.guessedLocations.push(x);
+            var hit = $scope.myTotalLocations.indexOf(x.toString()) == -1 ? false : true;
+            if (hit) $scope.myTotalLocations = $scope.myTotalLocations.filter(function(y) {return y != parseInt(x);});
+            var message = hit ? "hit one of your ships!" : "missed your ships!";
+            var sank = hit ? removeFromLocations($scope.myLocations, x) : false;
+            $scope.myBoard[x].backgroundColor = hit ? "green" : "red"; 
+            if (!sank) {
+                addNewMessage("The enemy guessed " + $scope.translate(parseInt(x) + 1) + " and " + message);
+                if (hit) foundShip.push(x.toString());
+            }
+            $scope.yourTurn = true;
+            if ($scope.myLocations.length != 0) addNewMessage("It is your turn to attack.");
+        } else {
+            // choose possible square 
+            if (foundShip.length == 1) {
+                possibleLocationFinding(foundShip, 1, true, true);
+
+                var x = $scope.possibleLocations[Math.floor((Math.random() * $scope.possibleLocations.length))];
+                while ($scope.guessedLocations.indexOf(x) != -1) {
+                   x = $scope.possibleLocations[Math.floor((Math.random() * $scope.possibleLocations.length))];
+                }
+                $scope.guessedLocations.push(x);
+                var hit = $scope.myTotalLocations.indexOf(x.toString()) == -1 ? false : true;
+                if (hit) $scope.myTotalLocations = $scope.myTotalLocations.filter(function(y) {return y != parseInt(x);});
+                var message = hit ? "hit one of your ships!" : "missed your ships!";
+                var sank = hit ? removeFromLocations($scope.myLocations, x) : false;
+                $scope.myBoard[x].backgroundColor = hit ? "green" : "red";
+                if (!sank) {
+                    addNewMessage("The enemy guessed " + $scope.translate(parseInt(x) + 1) + " and " + message);
+                    if (hit) foundShip.push(x.toString());
+                } else {
+                    foundShip = [];
+                }
+                $scope.yourTurn = true;
+                if ($scope.myLocations.length != 0) addNewMessage("It is your turn to attack.");
+            } else {
+                // figure out what direction the ship is going and choose those
+                var first = foundShip[0];
+                var second = foundShip[1];
+
+                if (Math.abs(first - second) < 10) {
+                    // guess horizontally
+                    possibleLocationFinding(foundShip, 1, true, false);
+                } else {
+                    // guess vertically
+                    possibleLocationFinding(foundShip, 1, false, true);
+                }
+            }
+        }
+
+        $scope.possibleLocations = [];
+    }
+
+    var possibleLocationFinding = function(locations, amount, horizontal, vertical) {
+        var location = parseInt(locations[0]);
+        var first = (location + amount).toString();
+        var second = locations[0];
+
+        if (first.length == 1) first = "0";
+        if (second.length == 1) second = "0";
+
+        first = first[0];
+        second = second[0];
+
+        if ((first == second && location + amount < 100) && horizontal)
+            $scope.possibleLocations.push(location + amount);
+
+        first = (location - amount).toString();
+        second = locations[0];
+
+        if (first.length == 1) first = "0";
+        if (second.length == 1) second = "0";
+
+        first = first[0];
+        second = second[0];
+
+        if ((first == second && location - amount > -1) && horizontal)
+            $scope.possibleLocations.push(location - amount);
+
+        if (vertical) {
+            if (location + (amount * 10) < 100)                
+                $scope.possibleLocations.push(location + (amount * 10));
+            if (location - ($scope.blocksLeft * 10) > -1)
+                $scope.possibleLocations.push(location - (amount * 10));
+        }
+    }
+
     // This method calculates any possible location of the end of the ship given a specific start point. 
     // Also fills in all the squares once the player picks a correct end point
     var updatePossibleLocations = function(enemy) {
         if ($scope.blocksLeft > 0) {
             if ($scope.shipLocations.length == 1) {
-                var location = parseInt($scope.shipLocations[0]);
-                var first = (location + $scope.blocksLeft).toString();
-                var second = $scope.shipLocations[0];
-
-                if (first.length == 1) first = "0";
-                if (second.length == 1) second = "0";
-
-                first = first[0];
-                second = second[0];
-
-                if (first == second && location + $scope.blocksLeft < 100)
-                    $scope.possibleLocations.push(location + $scope.blocksLeft);
-
-                first = (location - $scope.blocksLeft).toString();
-                second = $scope.shipLocations[0];
-
-                if (first.length == 1) first = "0";
-                if (second.length == 1) second = "0";
-
-                first = first[0];
-                second = second[0];
-
-                if (first == second && location - $scope.blocksLeft > -1)
-                    $scope.possibleLocations.push(location - $scope.blocksLeft);
-
-                if (location + ($scope.blocksLeft * 10) < 100)                
-                    $scope.possibleLocations.push(location + ($scope.blocksLeft * 10));
-                if (location - ($scope.blocksLeft * 10) > -1)
-                    $scope.possibleLocations.push(location - ($scope.blocksLeft * 10));
+                // fill in possible locations
+                possibleLocationFinding($scope.shipLocations, $scope.blocksLeft, true, true);
             } else if ($scope.shipLocations.length == 2) {
                 var first = parseInt($scope.shipLocations[0]);
                 var second = parseInt($scope.shipLocations[1]);
@@ -243,7 +317,7 @@ app.controller("myCtrl", function ($scope) {
                     if (!enemy) {
                         $scope.myLocations[currentShip].push(i.toString());
                         $scope.myTotalLocations.push(i.toString());
-                        $scope.myBoard[i].backgroundColor = "black";
+                        $scope.myBoard[i].backgroundColor = "#" + color.toString().repeat(6);
                     } else {
                         $scope.enemyLocations[currentShip].push(i.toString());
                         $scope.enemyTotalLocations.push(i.toString());
@@ -310,7 +384,6 @@ app.controller("myCtrl", function ($scope) {
     }
     
     // This function resets the whole game and is able to play again
-    // TODO: Add functionality for new arrays and variables 
     $scope.reset = function() {
         $scope.picking = 0;
         $scope.messages = [];
@@ -343,6 +416,8 @@ app.controller("myCtrl", function ($scope) {
         $scope.playerHit = 0;
         $scope.enemyHit = 0;
         myChoices = [];
+        color = 0;
+        foundShip = [];
 
         for (var i = 0; i < 100; i++) {
             $scope.enemyBoard[i].backgroundColor = "dodgerblue";
@@ -359,31 +434,13 @@ app.controller("myCtrl", function ($scope) {
                 $scope.stillGuessing = true;
             } else {
                 if (!$scope.stillGuessing) {
-                    addNewMessage(thinkingMessages[Math.floor((Math.random() * thinkingMessages.length - 1))]);
+                    // addNewMessage(thinkingMessages[Math.floor((Math.random() * thinkingMessages.length - 1))]);
                     computerGuess();
                 }
             }
         }
     });
 
-    // This method choices a random location for the computer to pick
-    // TODO: Add in some sort of logic so when the computer guesses a correct location, it guesses around the spot, randomly
-    var computerGuess = function() {
-        var x = Math.floor((Math.random() * 100));
-        while ($scope.guessedLocations.indexOf(x) != -1) {
-           x = Math.floor((Math.random() * 100));
-        }
-        $scope.guessedLocations.push(x);
-        var hit = $scope.myTotalLocations.indexOf(x.toString()) == -1 ? false : true;
-        if (hit) $scope.myTotalLocations = $scope.myTotalLocations.filter(function(y) {return y != parseInt(x);});
-        var message = hit ? "hit one of your ships!" : "missed your ships!";
-        var sank = hit ? removeFromLocations($scope.myLocations, x) : false;
-        $scope.myBoard[x].backgroundColor = hit ? "green" : "red"; 
-        if (!sank) addNewMessage("The enemy guessed " + $scope.translate(parseInt(x) + 1) + " and " + message);
-        $scope.yourTurn = true;
-        if ($scope.myLocations.length != 0) addNewMessage("It is your turn to attack.");
-    }
-    
     // This function is called when the user hovers over a square and changes the color appropriately 
     $scope.hover = function($event, board) {
         var id = $event.currentTarget.id;
@@ -396,10 +453,10 @@ app.controller("myCtrl", function ($scope) {
                 }
             }
             if (!clicked)
-                if (board[id].backgroundColor != "red" || board[id].backgroundColor != "green")
+                if (board[id].backgroundColor == "dodgerblue")
                     board[id].backgroundColor = "gray";
         } else if (board == $scope.myBoard){
-            if ($scope.pickingShips)  if (board[id].backgroundColor != "black") board[id].backgroundColor = "gray";
+            if ($scope.pickingShips)  if (board[id].backgroundColor == "dodgerblue") board[id].backgroundColor = "gray";
         }
     }
     
@@ -415,18 +472,18 @@ app.controller("myCtrl", function ($scope) {
                 } 
             }
             if (!clicked)
-                if (board[id].backgroundColor != "red" || board[id].backgroundColor != "green" || board[id].backgroundColor != "black")
+                if (board[id].backgroundColor == "gray")
                     board[id].backgroundColor = "dodgerblue";
         } else if (board == $scope.myBoard) {
-            if ($scope.pickingShips) if (board[id].backgroundColor != "black") board[id].backgroundColor = "dodgerblue";
+            if ($scope.pickingShips) if (board[id].backgroundColor == "gray") board[id].backgroundColor = "dodgerblue";
         }
     }
 
     // This method takes a message and adds it to the messages array. Also removes messages if there are too many
     var addNewMessage = function(message) {
         $scope.messages.unshift(message);
-        if ($scope.messages.length > 5) {
-            $scope.messages = $scope.messages.slice(0, 5);
+        if ($scope.messages.length > 3) {
+            $scope.messages = $scope.messages.slice(0, 3);
         }
     }
 
@@ -449,8 +506,9 @@ app.controller("myCtrl", function ($scope) {
 
         var second = str.charAt(str.length - 2);
         var letterNum = second == "" ? 0 : (second == "0" ? 9 : parseInt(second));
-        var letter = String.fromCharCode(letterNum + 65);
-        return letter + num;
+        var toAdd = n % 10 == 0 ? 64 : 65;
+        var letter = String.fromCharCode(letterNum + toAdd);
+        if (n == 100) return "J10"; else return letter + num;
     }
     
     // This function is called when the enemy wins
