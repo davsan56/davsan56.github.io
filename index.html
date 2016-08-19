@@ -22,8 +22,12 @@
             <button class="btn btn-primary" role="button" ng-click="reset();" ng-disabled="num < 1 || num > 12">Start!</button>
         </div>
         <button class="btn btn-primary" role="button" ng-click="reset()">Reset</button>
+        <div class="form-group">
+          <label>Easy Mode</label>
+          <input type="checkbox" name="easy" ng-model="easyMode" />
+        </div>
         <div class="form-group pull-right">
-          <div id="info" class="pull-right">
+          <div id="label" class="pull-right">
             <label>Unclicked box:</label> <div class="myBox inline blue"></div>
             <label>Your ship:</label> <div class="myBox inline black"></div>
             <label>Missed guess:</label> <div class="myBox inline red"></div>
@@ -34,15 +38,15 @@
     </div>
     <div id="gameBoard" class="row">
       <div id="info" class="row">
-        <div class="col-md-2">
+        <div class="col-md-3 score">
           <h4>You've found</h3>
           <h1 class="big"><sup>{{playerHit}}</sup>&frasl;<sub>{{num}}</sub></h3>
           <h4>ships</h3>
         </div>
-        <div id="info" class="col-md-8">
+        <div id="info" class="col-md-6">
           <h4 ng-repeat="message in messages track by $index">{{message}}</h4>
         </div>
-        <div class="col-md-2">
+        <div class="col-md-3 score">
           <h4>The enemy found</h3>
           <h1 class="big"><sup>{{enemyHit}}</sup>&frasl;<sub>{{num || 0}}</sub></h3>
           <h4>ships</h3>
@@ -58,8 +62,7 @@
           </div>
           <div id="enemyBoard">
             <div ng-repeat="n in enemyBoard track by n.id" ng-mouseenter="hover($event, enemyBoard)" ng-mouseleave="exit($event, enemyBoard)" style="background-color: {{n.backgroundColor}}" class="enemyBox" id="{{n.id}}" ng-click="myGuess($event)">
-                {{n.id}}
-                <!-- {{translate(n.id + 1)}} -->
+                <!-- {{translate(n.id + 1)}} -->{{n.id}}
             </div>
           </div>
           <h3 id="enemy">Enemy</h3>
@@ -70,8 +73,7 @@
           </div>
           <div id="yourBoard" class="pull-right">
             <div ng-repeat="n in myBoard track by n.id" ng-mouseenter="hover($event, myBoard)" ng-mouseleave="exit($event, myBoard)" style="background-color: {{n.backgroundColor}}" class="myBox" id="{{n.id}}" ng-click="assign($event)">
-                {{n.id}}
-                <!-- {{translate(n.id + 1)}} -->
+                <!-- {{translate(n.id + 1)}} -->{{n.id}}
             </div>
           </div>
           <div id="my-side-nav">
