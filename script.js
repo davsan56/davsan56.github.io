@@ -184,6 +184,27 @@ app.controller("myCtrl", function ($scope) {
         }
     }
 
+    var updateScreen = function() {
+        var x = $scope.possibleLocations[Math.floor((Math.random() * $scope.possibleLocations.length))];
+        while ($scope.guessedLocations.indexOf(x) != -1) {
+           x = $scope.possibleLocations[Math.floor((Math.random() * $scope.possibleLocations.length))];
+        }
+        $scope.guessedLocations.push(x);
+        var hit = $scope.myTotalLocations.indexOf(x.toString()) == -1 ? false : true;
+        if (hit) $scope.myTotalLocations = $scope.myTotalLocations.filter(function(y) {return y != parseInt(x);});
+        var message = hit ? "hit one of your ships!" : "missed your ships!";
+        var sank = hit ? removeFromLocations($scope.myLocations, x) : false;
+        $scope.myBoard[x].backgroundColor = hit ? "green" : "red";
+        if (!sank) {
+            addNewMessage("The enemy guessed " + $scope.translate(parseInt(x) + 1) + " and " + message);
+            if (hit) foundShip.push(x.toString());
+        } else {
+            foundShip = [];
+        }
+        $scope.yourTurn = true;
+        if ($scope.myLocations.length != 0) addNewMessage("It is your turn to attack.");
+    }
+
     // This method choices a random location for the computer to pick
     // TODO: Add in some sort of logic so when the computer guesses a correct location, it guesses around the spot, randomly
     var computerGuess = function() {
@@ -209,25 +230,7 @@ app.controller("myCtrl", function ($scope) {
             // choose possible square 
             if (foundShip.length == 1) {
                 possibleLocationFinding(foundShip, 1, true, true);
-
-                var x = $scope.possibleLocations[Math.floor((Math.random() * $scope.possibleLocations.length))];
-                while ($scope.guessedLocations.indexOf(x) != -1) {
-                   x = $scope.possibleLocations[Math.floor((Math.random() * $scope.possibleLocations.length))];
-                }
-                $scope.guessedLocations.push(x);
-                var hit = $scope.myTotalLocations.indexOf(x.toString()) == -1 ? false : true;
-                if (hit) $scope.myTotalLocations = $scope.myTotalLocations.filter(function(y) {return y != parseInt(x);});
-                var message = hit ? "hit one of your ships!" : "missed your ships!";
-                var sank = hit ? removeFromLocations($scope.myLocations, x) : false;
-                $scope.myBoard[x].backgroundColor = hit ? "green" : "red";
-                if (!sank) {
-                    addNewMessage("The enemy guessed " + $scope.translate(parseInt(x) + 1) + " and " + message);
-                    if (hit) foundShip.push(x.toString());
-                } else {
-                    foundShip = [];
-                }
-                $scope.yourTurn = true;
-                if ($scope.myLocations.length != 0) addNewMessage("It is your turn to attack.");
+                updateScreen();
             } else {
                 // figure out what direction the ship is going and choose those
                 var first = foundShip[0];
@@ -240,6 +243,8 @@ app.controller("myCtrl", function ($scope) {
                     // guess vertically
                     possibleLocationFinding(foundShip, 1, false, true);
                 }
+
+                updateScreen();
             }
         }
 
@@ -247,37 +252,41 @@ app.controller("myCtrl", function ($scope) {
     }
 
     var possibleLocationFinding = function(locations, amount, horizontal, vertical) {
-        var location = parseInt(locations[0]);
-        var first = (location + amount).toString();
-        var second = locations[0];
+        for (var i = 0; i < locations.length; i++) {
+            var location = parseInt(locations[i]);
+            var first = (location + amount).toString();
+            var second = locations[0];
 
-        if (first.length == 1) first = "0";
-        if (second.length == 1) second = "0";
+            if (first.length == 1) first = "0";
+            if (second.length == 1) second = "0";
 
-        first = first[0];
-        second = second[0];
+            first = first[0];
+            second = second[0];
 
-        if ((first == second && location + amount < 100) && horizontal)
-            $scope.possibleLocations.push(location + amount);
+            if ((first == second && location + amount < 100) && horizontal)
+                $scope.possibleLocations.push(location + amount);
 
-        first = (location - amount).toString();
-        second = locations[0];
+            first = (location - amount).toString();
+            second = locations[0];
 
-        if (first.length == 1) first = "0";
-        if (second.length == 1) second = "0";
+            if (first.length == 1) first = "0";
+            if (second.length == 1) second = "0";
 
-        first = first[0];
-        second = second[0];
+            first = first[0];
+            second = second[0];
 
-        if ((first == second && location - amount > -1) && horizontal)
-            $scope.possibleLocations.push(location - amount);
+            if ((first == second && location - amount > -1) && horizontal)
+                $scope.possibleLocations.push(location - amount);
 
-        if (vertical) {
-            if (location + (amount * 10) < 100)                
-                $scope.possibleLocations.push(location + (amount * 10));
-            if (location - ($scope.blocksLeft * 10) > -1)
-                $scope.possibleLocations.push(location - (amount * 10));
+            if (vertical) {
+                if (location + (amount * 10) < 100)                
+                    $scope.possibleLocations.push(location + (amount * 10));
+                if (location - (amount * 10) > -1)
+                    $scope.possibleLocations.push(location - (amount * 10));
+            }
         }
+
+        console.log($scope.possibleLocations);
     }
 
     // This method calculates any possible location of the end of the ship given a specific start point. 
