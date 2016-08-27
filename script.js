@@ -3,7 +3,6 @@ app.controller("myCtrl", function ($scope) {
     var myChoices = [];
     $scope.myBoard = [];
     $scope.enemyBoard = [];
-    $scope.num = 7;
     $scope.started = false;
     $scope.messages = [];
     var guessing = false;
@@ -62,6 +61,8 @@ app.controller("myCtrl", function ($scope) {
         "Submarine": 1,
         "second Submarine": 1
     }
+
+    $scope.num = Object.keys(ships).length;
     
     // Initializes the array for the players board
     for (var i = 0; i < 100; i++) {

@@ -23,7 +23,6 @@
     "commit": "bda4883fd2b278df3a48db4add7dc4d994477734"
   },
   "_source": "https://github.com/samrayner/bootstrap-side-navbar.git",
-  "_target": "~1.0.1",
-  "_originalSource": "bootstrap-side-navbar",
-  "_direct": true
+  "_target": "1.0.1",
+  "_originalSource": "bootstrap-side-navbar"
 }

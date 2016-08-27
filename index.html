@@ -9,8 +9,11 @@
     <!-- Bootstrap -->
     <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
 
-    <!-- bootstrap side navbar -->
+    <!-- Bootstrap Side Navbar -->
     <link href="bower_components/bootstrap-side-navbar/source/assets/stylesheets/navbar-fixed-side.css" rel="stylesheet" />
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.min.css">
 
     <!-- Custom CSS -->
     <link rel="stylesheet" href="style.css" />
@@ -42,8 +45,13 @@
                     <button class="btn btn-primary" role="button" ng-click="reset();">Start!</button>
                   </form>
                 </li>
-                <li ng-class="easyMode ? 'active' : ''">
-                  <a href="" ng-click="easyMode = !easyMode">Easy Mode</a>
+                <li ng-class="easyMode ? 'active' : ''" class="text-center">
+                  <a href="" ng-click="easyMode = !easyMode">
+                    <span  ng-show="easyMode">
+                      <i class="fa fa-check"></i>
+                      <br/>
+                    </span>Easy Mode
+                  </a>
                 </li>
                 <li>
                   <form class="navbar-form text-center" id="label">
