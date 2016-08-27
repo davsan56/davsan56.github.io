@@ -5,81 +5,108 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Battleship!</title>
-    <!-- Latest compiled and minified CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+
+    <!-- bootstrap side navbar -->
+    <link href="bower_components/bootstrap-side-navbar/source/assets/stylesheets/navbar-fixed-side.css" rel="stylesheet" />
+
+    <!-- Custom CSS -->
     <link rel="stylesheet" href="style.css" />
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular.min.js"></script>
+
+    <!-- jQuery -->
+    <script src="bower_components/jquery/dist/jquery.min.js"></script>
+
+    <!-- Angular -->
+    <script src="bower_components/angular/angular.min.js"></script>
+
+    <!-- Bootstrap JS -->
+    <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>    
+
+    <!-- Custom JS -->
     <script src="script.js"></script>
-    <!-- Latest compiled and minified JavaScript -->
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
   </head>
-  <body ng-app="battleship" ng-controller="myCtrl" class="container">
-    <div class="row page-header" id="header">
-      <form class="form-inline" autocomplete="off">
-      <h1 id="title">Battleship!</h1>
-        <div class="form-group">
-            <button class="btn btn-primary" role="button" ng-click="reset();" ng-disabled="num < 1 || num > 12">Start!</button>
-        </div>
-        <button class="btn btn-primary" role="button" ng-click="reset()">Reset</button>
-        <div class="form-group">
-          <label>Easy Mode</label>
-          <input type="checkbox" name="easy" ng-model="easyMode" />
-        </div>
-        <div class="form-group pull-right">
-          <div id="label" class="pull-right">
-            <label>Unclicked box:</label> <div class="myBox inline blue"></div>
-            <label>Your ship:</label> <div class="myBox inline black"></div>
-            <label>Missed guess:</label> <div class="myBox inline red"></div>
-            <label>Correct guess:</label> <div class="myBox inline green"></div>
+  <body ng-app="battleship" ng-controller="myCtrl" class="container-fluid">
+    <div class="row">
+      <div class="col-md-1">
+        <nav class="navbar navbar-default navbar-fixed-side">
+          <div class="container">
+            <div class="navbar-header">
+              <a class="navbar-brand" href="https://davsan56.github.io/">Battleship</a>
+            </div>
+            <div class="collapse navbar-collapse">
+                <ul class="nav navbar-nav">
+                <li>
+                  <form class="navbar-form text-center">
+                    <button class="btn btn-primary" role="button" ng-click="reset();">Start!</button>
+                  </form>
+                </li>
+                <li ng-class="easyMode ? 'active' : ''">
+                  <a href="" ng-click="easyMode = !easyMode">Easy Mode</a>
+                </li>
+                <li>
+                  <form class="navbar-form text-center" id="label">
+                    <label>Unclicked box:</label> <div class="myBox inline blue"></div>
+                    <label>Your ship:</label> <div class="myBox inline black"></div>
+                    <label>Missed guess:</label> <div class="myBox inline red"></div>
+                    <label>Correct guess:</label> <div class="myBox inline green"></div>
+                  </form>
+                </li>
+              </ul>
+            </div>
           </div>
-        </div>
-      </form>
-    </div>
-    <div id="gameBoard" class="row">
-      <div id="info" class="row">
-        <div class="col-md-3 score">
-          <h4>You've found</h3>
-          <h1 class="big"><sup>{{playerHit}}</sup>&frasl;<sub>{{num}}</sub></h3>
-          <h4>ships</h3>
-        </div>
-        <div id="info" class="col-md-6">
-          <h4 ng-repeat="message in messages track by $index">{{message}}</h4>
-        </div>
-        <div class="col-md-3 score">
-          <h4>The enemy found</h3>
-          <h1 class="big"><sup>{{enemyHit}}</sup>&frasl;<sub>{{num || 0}}</sub></h3>
-          <h4>ships</h3>
-        </div>
+        </nav>
       </div>
-      <div class="row">
-        <div class="col-md-6">
-          <div id="enemy-top-nav">
-            <div class="top-nav" ng-repeat="n in range(1,10)">{{n}}</div>
-          </div>
-          <div id="enemy-side-nav">
-            <div class="side-nav" ng-repeat="letter in abc">{{letter}}</div>
-          </div>
-          <div id="enemyBoard">
-            <div ng-repeat="n in enemyBoard track by n.id" ng-mouseenter="hover($event, enemyBoard)" ng-mouseleave="exit($event, enemyBoard)" style="background-color: {{n.backgroundColor}}" class="enemyBox" id="{{n.id}}" ng-click="myGuess($event)">
-                <!-- {{translate(n.id + 1)}} -->{{n.id}}
+      <div class="col-md-11">
+        <div id="gameBoard" class="row">
+          <div class="col-md-12">
+            <div id="info" class="row">
+              <div class="col-md-3 score">
+                <h4>You've found</h4>
+                <h1 class="big"><sup>{{playerHit}}</sup>&frasl;<sub>{{num}}</sub></h1>
+                <h4>ships</h4>
+              </div>
+              <div id="info" class="col-md-6">
+                <h4 ng-repeat="message in messages track by $index">{{message}}</h4>
+              </div>
+              <div class="col-md-3 score">
+                <h4>The enemy found</h4>
+                <h1 class="big"><sup>{{enemyHit}}</sup>&frasl;<sub>{{num || 0}}</sub></h1>
+                <h4>ships</h4>
+              </div>
             </div>
           </div>
-          <h3 id="enemy">Enemy</h3>
-        </div>
-        <div class="col-md-6">
-          <div id="my-top-nav" class="pull-right">
-            <div class="top-nav" ng-repeat="n in range(1,10)">{{n}}</div>
-          </div>
-          <div id="yourBoard" class="pull-right">
-            <div ng-repeat="n in myBoard track by n.id" ng-mouseenter="hover($event, myBoard)" ng-mouseleave="exit($event, myBoard)" style="background-color: {{n.backgroundColor}}" class="myBox" id="{{n.id}}" ng-click="assign($event)">
-                <!-- {{translate(n.id + 1)}} -->{{n.id}}
+          <div class="col-md-12">
+            <div class="row">
+              <div class="col-md-6">
+                <div id="enemy-top-nav">
+                  <div class="top-nav" ng-repeat="n in range(1,10)">{{n}}</div>
+                </div>
+                <div id="enemy-side-nav">
+                  <div class="side-nav" ng-repeat="letter in abc">{{letter}}</div>
+                </div>
+                <div id="enemyBoard">
+                  <div ng-repeat="n in enemyBoard track by n.id" ng-mouseenter="hover($event, enemyBoard)" ng-mouseleave="exit($event, enemyBoard)" style="background-color: {{n.backgroundColor}}" class="enemyBox" id="{{n.id}}" ng-click="myGuess($event)">
+                      {{translate(n.id + 1)}}
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6" id="yourSideBoard">
+                <div id="my-top-nav" class="pull-right">
+                  <div class="top-nav" ng-repeat="n in range(1,10)">{{n}}</div>
+                </div>
+                <div id="yourBoard" class="pull-right">
+                  <div ng-repeat="n in myBoard track by n.id" ng-mouseenter="hover($event, myBoard)" ng-mouseleave="exit($event, myBoard)" style="background-color: {{n.backgroundColor}}" class="myBox" id="{{n.id}}" ng-click="assign($event)">
+                      {{translate(n.id + 1)}}
+                  </div>
+                </div>
+                <div id="my-side-nav">
+                  <div class="side-nav" ng-repeat="letter in abc">{{letter}}</div>
+                </div>
+              </div>
             </div>
           </div>
-          <div id="my-side-nav">
-            <div class="side-nav" ng-repeat="letter in abc">{{letter}}</div>
-          </div>
-          <h3 id="you">You</h3>
         </div>
       </div>
     </div>

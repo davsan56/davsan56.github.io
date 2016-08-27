@@ -1,0 +1,12 @@
+{
+  "name": "battleship",
+  "version": "0.0.1",
+  "author": "David San Antonio",
+  "dependencies": {
+    "angular": "1.5.8",
+    "bootstrap": "3.3.7",
+    "bootstrap-side-navbar": "1.0.1",
+    "jquery": "3.1.0"
+  },
+  "private": true
+}
