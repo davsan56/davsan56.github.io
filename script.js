@@ -65,7 +65,7 @@ app.controller("myCtrl", function ($scope) {
     $scope.num = Object.keys(ships).length;
 
     // Make this variable true to see the enemy ships
-    var testing = true;
+    var testing = false;
     
     // Initializes the array for the players board
     for (var i = 0; i < 100; i++) {
