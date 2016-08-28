@@ -106,7 +106,7 @@
                 </div>
                 <div id="yourBoard" class="pull-right">
                   <div ng-repeat="n in myBoard track by n.id" ng-mouseenter="hover($event, myBoard)" ng-mouseleave="exit($event, myBoard)" style="background-color: {{n.backgroundColor}}" class="myBox" id="{{n.id}}" ng-click="assign($event)">
-                      {{translate(n.id + 1)}}
+                      <!-- {{translate(n.id + 1)}} -->{{n.id}}
                   </div>
                 </div>
                 <div id="my-side-nav">

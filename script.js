@@ -63,6 +63,9 @@ app.controller("myCtrl", function ($scope) {
     }
 
     $scope.num = Object.keys(ships).length;
+
+    // Make this variable true to see the enemy ships
+    var testing = true;
     
     // Initializes the array for the players board
     for (var i = 0; i < 100; i++) {
@@ -95,7 +98,7 @@ app.controller("myCtrl", function ($scope) {
             $scope.enemyLocations[currentShip].push(id);
             $scope.enemyTotalLocations.push(id);
             $scope.shipLocations.push(id);
-            // $scope.enemyBoard[id].backgroundColor = "green";
+            if (testing) $scope.enemyBoard[id].backgroundColor = "#" + color.toString().repeat(6);
             $scope.blocksLeft--;
             updatePossibleLocations(true);
 
@@ -109,7 +112,7 @@ app.controller("myCtrl", function ($scope) {
                 $scope.enemyLocations[currentShip].push(id);
                 $scope.enemyTotalLocations.push(id);
                 $scope.shipLocations.push(id);
-                // $scope.enemyBoard[id].backgroundColor = "red";
+                if (testing) $scope.enemyBoard[id].backgroundColor = "#" + color.toString().repeat(6);
                 $scope.blocksLeft--;
                 updatePossibleLocations(true);
             }
@@ -117,6 +120,7 @@ app.controller("myCtrl", function ($scope) {
             currentShip++;
             $scope.shipLocations = [];
             $scope.possibleLocations = [];
+            color += 2;
         }
 
         currentShip = -1;
@@ -125,6 +129,7 @@ app.controller("myCtrl", function ($scope) {
         $scope.possibleLocations = [];
         $scope.pickingShips = true;
         $scope.blocksLeft = 0;
+        color = 0;
     }
 
     // When the user is still pickingShips and there are 0 blocks left to pick, tell the user to pick the next ship
@@ -285,9 +290,25 @@ app.controller("myCtrl", function ($scope) {
                 if (location - (amount * 10) > -1)
                     $scope.possibleLocations.push(location - (amount * 10));
             }
-        }
 
-        console.log($scope.possibleLocations);
+            // Filter out any locations that if the user picked them, would cross over a currently assigned space
+            for (var i = 0; i < $scope.possibleLocations.length; i++) {
+                var end = $scope.possibleLocations[i];
+                var toAdd = Math.abs(location - end) < 10 ? 1 : 10;
+                for (var j = location + 1; j <= end; j += toAdd) {
+                    if ($scope.myTotalLocations.indexOf(j.toString()) != -1) {
+                        $scope.possibleLocations = $scope.possibleLocations.filter(
+                            function(x) {
+                                return x != end.toString()
+                            }
+                        );
+                        break;
+                    }
+                }
+            }
+
+            console.log($scope.possibleLocations);
+        }
     }
 
     // This method calculates any possible location of the end of the ship given a specific start point. 
@@ -331,7 +352,7 @@ app.controller("myCtrl", function ($scope) {
                     } else {
                         $scope.enemyLocations[currentShip].push(i.toString());
                         $scope.enemyTotalLocations.push(i.toString());
-                        // $scope.enemyBoard[i].backgroundColor = "black";
+                        if (testing) $scope.enemyBoard[i].backgroundColor = "#" + color.toString().repeat(6);
                     }
                     $scope.shipLocations.push(i.toString());
                     $scope.blocksLeft--;
