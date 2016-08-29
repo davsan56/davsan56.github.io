@@ -65,7 +65,7 @@ app.controller("myCtrl", function ($scope) {
     $scope.num = Object.keys(ships).length;
 
     // Make this variable true to see the enemy ships
-    var testing = false;
+    var testing = true;
     
     // Initializes the array for the players board
     for (var i = 0; i < 100; i++) {
@@ -85,7 +85,7 @@ app.controller("myCtrl", function ($scope) {
     
     // Picks random enemy locations
     $scope.initialize = function() {
-        for (var i = 0; i < Object.keys(ships).length; i++) {
+        for (var i = 0; i < 2; i++) { //Object.keys(ships).length
             $scope.length = ships[Object.keys(ships)[i]];
             $scope.blocksLeft = $scope.length;
 
@@ -101,6 +101,39 @@ app.controller("myCtrl", function ($scope) {
             if (testing) $scope.enemyBoard[id].backgroundColor = "#" + color.toString().repeat(6);
             $scope.blocksLeft--;
             updatePossibleLocations(true);
+
+            for (var j = 0; j < $scope.possibleLocations.length; j++) {
+                var first = parseInt(id);
+                var second = parseInt($scope.possibleLocations[j]);
+
+                var toAdd = 0;
+                var k = 0;
+                var lessThan = 0;
+                if (Math.abs(first - second) < 10) {
+                    toAdd = 1;
+                    if (first > second) {
+                        k = second + 1;
+                        lessThan = first;
+                    } else {
+                        k = first + 1;
+                        lessThan = second;
+                    }
+                } else {
+                    toAdd = 10;
+                    if (first > second) {
+                        k = second + 10;
+                        lessThan = first;
+                    } else {
+                        k = first + 10;
+                        lessThan = second;
+                    }
+                }
+                for (k; k < lessThan; k += toAdd) {
+                    if ($scope.enemyTotalLocations.indexOf(k.toString()) != -1) {
+                        $scope.possibleLocations = $scope.possibleLocations.filter(function(x){return x != k.toString()});
+                    }
+                }
+            }
 
             if ($scope.length > 1) {
                 id = $scope.possibleLocations[Math.floor((Math.random() * $scope.possibleLocations.length))];
@@ -269,7 +302,7 @@ app.controller("myCtrl", function ($scope) {
             first = first[0];
             second = second[0];
 
-            if ((first == second && location + amount < 100) && horizontal)
+            if ((first == second && location + amount < 100) && horizontal )
                 $scope.possibleLocations.push(location + amount);
 
             first = (location - amount).toString();
@@ -289,26 +322,6 @@ app.controller("myCtrl", function ($scope) {
                     $scope.possibleLocations.push(location + (amount * 10));
                 if (location - (amount * 10) > -1)
                     $scope.possibleLocations.push(location - (amount * 10));
-            }
-        }
-
-        if (!horizontal || !vertical) {
-            // Filter out any locations that if the user picked them, would cross over a currently assigned space
-            for (var i = 0; i < $scope.possibleLocations.length; i++) {
-                var end = $scope.possibleLocations[i];
-                var toAdd = 0;
-                if (horizontal && !vertical) toAdd = 1;
-                else if (!horizontal && vertical) toAdd = 10;
-                for (var j = location + 1; j <= end; j += toAdd) {
-                    if ($scope.myTotalLocations.indexOf(j.toString()) != -1) {
-                        $scope.possibleLocations = $scope.possibleLocations.filter(
-                            function(x) {
-                                return x != end.toString()
-                            }
-                        );
-                        break;
-                    }
-                }
             }
         }
     }

@@ -96,7 +96,7 @@
                 </div>
                 <div id="enemyBoard">
                   <div ng-repeat="n in enemyBoard track by n.id" ng-mouseenter="hover($event, enemyBoard)" ng-mouseleave="exit($event, enemyBoard)" style="background-color: {{n.backgroundColor}}" class="enemyBox" id="{{n.id}}" ng-click="myGuess($event)">
-                      {{translate(n.id + 1)}}
+                      <!-- {{translate(n.id + 1)}} -->{{n.id}}
                   </div>
                 </div>
               </div>
