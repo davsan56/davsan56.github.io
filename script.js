@@ -290,11 +290,15 @@ app.controller("myCtrl", function ($scope) {
                 if (location - (amount * 10) > -1)
                     $scope.possibleLocations.push(location - (amount * 10));
             }
+        }
 
+        if (!horizontal || !vertical) {
             // Filter out any locations that if the user picked them, would cross over a currently assigned space
             for (var i = 0; i < $scope.possibleLocations.length; i++) {
                 var end = $scope.possibleLocations[i];
-                var toAdd = Math.abs(location - end) < 10 ? 1 : 10;
+                var toAdd = 0;
+                if (horizontal && !vertical) toAdd = 1;
+                else if (!horizontal && vertical) toAdd = 10;
                 for (var j = location + 1; j <= end; j += toAdd) {
                     if ($scope.myTotalLocations.indexOf(j.toString()) != -1) {
                         $scope.possibleLocations = $scope.possibleLocations.filter(
@@ -306,8 +310,6 @@ app.controller("myCtrl", function ($scope) {
                     }
                 }
             }
-
-            console.log($scope.possibleLocations);
         }
     }
 
