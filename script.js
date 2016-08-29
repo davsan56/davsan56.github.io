@@ -65,7 +65,7 @@ app.controller("myCtrl", function ($scope) {
     $scope.num = Object.keys(ships).length;
 
     // Make this variable true to see the enemy ships
-    var testing = true;
+    var testing = false;
     
     // Initializes the array for the players board
     for (var i = 0; i < 100; i++) {
@@ -85,7 +85,7 @@ app.controller("myCtrl", function ($scope) {
     
     // Picks random enemy locations
     $scope.initialize = function() {
-        for (var i = 0; i < 2; i++) { //Object.keys(ships).length
+        for (var i = 0; i < Object.keys(ships).length; i++) { //Object.keys(ships).length
             $scope.length = ships[Object.keys(ships)[i]];
             $scope.blocksLeft = $scope.length;
 
@@ -130,7 +130,7 @@ app.controller("myCtrl", function ($scope) {
                 }
                 for (k; k < lessThan; k += toAdd) {
                     if ($scope.enemyTotalLocations.indexOf(k.toString()) != -1) {
-                        $scope.possibleLocations = $scope.possibleLocations.filter(function(x){return x != k.toString()});
+                        $scope.possibleLocations = $scope.possibleLocations.filter(function(x){return x != $scope.possibleLocations[j]});
                     }
                 }
             }
@@ -204,6 +204,38 @@ app.controller("myCtrl", function ($scope) {
                     $scope.myBoard[id].backgroundColor = "#" + color.toString().repeat(6);
                     $scope.blocksLeft--;
                     updatePossibleLocations(false);
+                    for (var j = 0; j < $scope.possibleLocations.length; j++) {
+                        var first = parseInt(id);
+                        var second = parseInt($scope.possibleLocations[j]);
+
+                        var toAdd = 0;
+                        var k = 0;
+                        var lessThan = 0;
+                        if (Math.abs(first - second) < 10) {
+                            toAdd = 1;
+                            if (first > second) {
+                                k = second + 1;
+                                lessThan = first;
+                            } else {
+                                k = first + 1;
+                                lessThan = second;
+                            }
+                        } else {
+                            toAdd = 10;
+                            if (first > second) {
+                                k = second + 10;
+                                lessThan = first;
+                            } else {
+                                k = first + 10;
+                                lessThan = second;
+                            }
+                        }
+                        for (k; k < lessThan; k += toAdd) {
+                            if ($scope.myTotalLocations.indexOf(k.toString()) != -1) {
+                                $scope.possibleLocations = $scope.possibleLocations.filter(function(x){return x != $scope.possibleLocations[j]});
+                            }
+                        }
+                    }
                 } else {
                     if ($scope.possibleLocations.indexOf(parseInt(id)) != -1) {
                         $scope.myLocations[currentShip].push(id);
