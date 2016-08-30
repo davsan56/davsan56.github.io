@@ -81,7 +81,7 @@
       <div class="col-md-11">
         <div id="gameBoard" class="row">
           <div class="col-md-12">
-            <div id="info" class="row">
+            <div id="info" class="row" ng-class="nightMode ? 'nightBorder' : ''">
               <div class="col-md-3 score">
                 <h4>You've found</h4>
                 <h1 class="big"><sup>{{playerHit}}</sup>&frasl;<sub>{{num}}</sub></h1>
@@ -101,10 +101,10 @@
             <div class="row">
               <div class="col-md-6">
                 <div id="enemy-top-nav">
-                  <div class="top-nav" ng-repeat="n in range(1,10)">{{n}}</div>
+                  <div class="top-nav" ng-repeat="n in range(1,10)" ng-class="nightMode ? 'nightBorder' : ''">{{n}}</div>
                 </div>
                 <div id="enemy-side-nav">
-                  <div class="side-nav" ng-repeat="letter in abc">{{letter}}</div>
+                  <div class="side-nav" ng-repeat="letter in abc" ng-class="nightMode ? 'nightBorder' : ''">{{letter}}</div>
                 </div>
                 <div id="enemyBoard">
                   <div ng-repeat="n in enemyBoard track by n.id" ng-mouseenter="hover($event, enemyBoard)" ng-mouseleave="exit($event, enemyBoard)" style="background-color: {{n.backgroundColor}}" class="enemyBox" id="{{n.id}}" ng-click="myGuess($event)">
@@ -114,7 +114,7 @@
               </div>
               <div class="col-md-6" id="yourSideBoard">
                 <div id="my-top-nav" class="pull-right">
-                  <div class="top-nav" ng-repeat="n in range(1,10)">{{n}}</div>
+                  <div class="top-nav" ng-repeat="n in range(1,10)" ng-class="nightMode ? 'nightBorder' : ''">{{n}}</div>
                 </div>
                 <div id="yourBoard" class="pull-right">
                   <div ng-repeat="n in myBoard track by n.id" ng-mouseenter="hover($event, myBoard)" ng-mouseleave="exit($event, myBoard)" style="background-color: {{n.backgroundColor}}" class="myBox" id="{{n.id}}" ng-click="assign($event)">
@@ -122,7 +122,7 @@
                   </div>
                 </div>
                 <div id="my-side-nav">
-                  <div class="side-nav" ng-repeat="letter in abc">{{letter}}</div>
+                  <div class="side-nav" ng-repeat="letter in abc" ng-class="nightMode ? 'nightBorder' : ''">{{letter}}</div>
                 </div>
               </div>
             </div>
