@@ -30,38 +30,50 @@
     <!-- Custom JS -->
     <script src="script.js"></script>
   </head>
-  <body ng-app="battleship" ng-controller="myCtrl" class="container-fluid">
+  <body ng-app="battleship" ng-controller="myCtrl" class="container-fluid" ng-class="nightMode ? 'dark' : ''">
     <div class="row">
       <div class="col-md-1">
-        <nav class="navbar navbar-default navbar-fixed-side">
-          <div class="container">
-            <div class="navbar-header">
-              <a class="navbar-brand" href="https://davsan56.github.io/">Battleship</a>
-            </div>
-            <div class="collapse navbar-collapse">
-                <ul class="nav navbar-nav">
-                <li>
-                  <form class="navbar-form text-center">
-                    <button class="btn btn-primary" role="button" ng-click="reset();">Start!</button>
-                  </form>
-                </li>
-                <li ng-class="easyMode ? 'active' : ''" class="text-center">
-                  <a href="" ng-click="easyMode = !easyMode">
-                    <span  ng-show="easyMode">
-                      <i class="fa fa-check"></i>
-                      <br/>
-                    </span>Easy Mode
-                  </a>
-                </li>
-                <li>
-                  <form class="navbar-form text-center" id="label">
-                    <label>Unclicked box:</label> <div class="myBox inline blue"></div>
-                    <label>Your ship:</label> <div class="myBox inline black"></div>
-                    <label>Missed guess:</label> <div class="myBox inline red"></div>
-                    <label>Correct guess:</label> <div class="myBox inline green"></div>
-                  </form>
-                </li>
-              </ul>
+        <nav class="navbar navbar-default navbar-fixed-side" ng-class="nightMode ? 'navbar-inverse' : ''">
+          <div class="container-fluid">
+            <div class="row">
+              <div class="col-md-12">
+                <div class="navbar-header">
+                  <a class="navbar-brand" href="https://davsan56.github.io/">Battleship</a>
+                </div>
+                <div class="collapse navbar-collapse">
+                  <ul class="nav navbar-nav">
+                    <li>
+                      <form class="navbar-form text-center">
+                        <button class="btn btn-primary" role="button" ng-click="reset();">{{message}}</button>
+                      </form>
+                    </li>
+                    <li ng-class="easyMode ? 'active' : ''" class="text-center">
+                      <a href="" ng-click="easyMode = !easyMode">
+                        <span  ng-show="easyMode">
+                          <i class="fa fa-check"></i>
+                          <br/>
+                        </span>Easy Mode
+                      </a>
+                    </li>
+                    <li ng-class="nightMode ? 'active' : ''" class="text-center">
+                      <a href="" ng-click="nightMode = !nightMode">
+                        <span  ng-show="nightMode">
+                          <i class="fa fa-check"></i>
+                          <br/>
+                        </span>Night Mode
+                      </a>
+                    </li>
+                    <li>
+                      <form class="navbar-form text-center" id="label" ng-class="nightMode ? 'night' : 'day'">
+                        <p>Unclicked box:</p> <div class="myBox inline blue"></div>
+                        <p>Your ship:</p> <div class="myBox inline black"></div>
+                        <p>Missed guess:</p> <div class="myBox inline red"></div>
+                        <p>Correct guess:</p> <div class="myBox inline green"></div>
+                      </form>
+                    </li>
+                  </ul>
+                </div>
+              </div>
             </div>
           </div>
         </nav>

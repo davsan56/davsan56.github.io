@@ -27,6 +27,8 @@ app.controller("myCtrl", function ($scope) {
     $scope.enemyHit = 0;
     $scope.playerHit = 0;
 
+    $scope.message = "Start!";
+
     $scope.myLocations = {
         0: [],
         1: [],
@@ -496,6 +498,7 @@ app.controller("myCtrl", function ($scope) {
         myChoices = [];
         color = 0;
         foundShip = [];
+        $scope.message = "Restart!";
 
         for (var i = 0; i < 100; i++) {
             $scope.enemyBoard[i].backgroundColor = "dodgerblue";
@@ -609,7 +612,15 @@ app.controller("myCtrl", function ($scope) {
                 $scope.started = false;
                 $scope.yourTurn = false;
                 $scope.finished = true;
+                showUnfoundEnemyShips();
             }
         }
     });
+
+    var showUnfoundEnemyShips = function() {
+        for (var i = 0; i < $scope.enemyTotalLocations.length; i++) {
+            var block = $scope.enemyTotalLocations[i];
+            $scope.enemyBoard[block].backgroundColor = "black";
+        }
+    }
 });

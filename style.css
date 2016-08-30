@@ -2,6 +2,22 @@
     margin-top: 0px !important;
 }
 
+.navbar-fixed-side {
+    overflow: hidden;
+}
+
+.night {
+    color: #9d9d9d;
+}
+
+.day {
+    color: #777;
+}
+
+.dark {
+    background-color: #959595;
+}
+
 #title {
     display: inline-block;
     margin-right: 20px;
