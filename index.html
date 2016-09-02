@@ -16,19 +16,24 @@
     <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.min.css">
 
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="styles/style.css" />
 
     <!-- jQuery -->
-    <script src="bower_components/jquery/dist/jquery.min.js"></script>
+    <script type="text/javascript" src="bower_components/jquery/dist/jquery.min.js"></script>
 
     <!-- Angular -->
-    <script src="bower_components/angular/angular.min.js"></script>
+    <script type="text/javascript" src="bower_components/angular/angular.min.js"></script>
 
     <!-- Bootstrap JS -->
-    <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>    
+    <script type="text/javascript" src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>    
+
+    <!-- Anuglar Bootstrap -->
+    <script type="text/javascript" src="bower_components/angular-bootstrap/ui-bootstrap.min.js"></script>
+    <script type="text/javascript" src="bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
 
     <!-- Custom JS -->
-    <script src="script.js"></script>
+    <script type="text/javascript" src="scripts/controllers/script.js"></script>
+    <script type="text/javascript" src="scripts/controllers/modal.js"></script>
   </head>
   <body ng-app="battleship" ng-controller="myCtrl" class="container-fluid" ng-class="nightMode ? 'dark' : ''">
     <div class="row">
@@ -82,24 +87,27 @@
         <div id="gameBoard" class="row">
           <div class="col-md-12">
             <div id="info" class="row" ng-class="nightMode ? 'nightBorder' : ''">
-              <div class="col-md-3 score">
-                <h4>You've found</h4>
-                <h1 class="big"><sup>{{playerHit}}</sup>&frasl;<sub>{{num}}</sub></h1>
-                <h4>ships</h4>
+              <div class="col-md-6 score" ng-hide="pickingShips">
+                <!-- <h4>You've found</h4> -->
+                <h1 class="pull-left big"><sup>{{playerHit}}</sup>&frasl;<sub>{{num}}</sub></h1>
+                <!-- <h4>ships</h4> -->
+                <div class="align-text" id="user-ships-left">
+                  <h4 ng-repeat="(name, length) in enemyShips track by $index" class="ships-left" id="enemy-{{name}}">{{name}}({{length}})</h4>
+                </div>
               </div>
-              <div id="info" class="col-md-6">
-                <h4 ng-repeat="message in messages track by $index">{{message}}</h4>
-              </div>
-              <div class="col-md-3 score">
-                <h4>The enemy found</h4>
-                <h1 class="big"><sup>{{enemyHit}}</sup>&frasl;<sub>{{num || 0}}</sub></h1>
-                <h4>ships</h4>
+              <div class="col-md-6 score" ng-class="pickingShips ? 'col-md-offset-6' : ''">
+                <!-- <h4>The enemy found</h4> -->
+                <h1 class="pull-right big"><sup>{{enemyHit}}</sup>&frasl;<sub>{{num || 0}}</sub></h1>
+                <!-- <h4>ships</h4> -->
+                <div class="align-text">
+                  <h4 ng-repeat="(name, length) in ships track by $index" class="ships-left" id="your-{{name}}">{{name}}({{length}})</h4>
+                </div>
               </div>
             </div>
           </div>
           <div class="col-md-12">
             <div class="row">
-              <div class="col-md-6">
+              <div class="col-md-6" ng-hide="pickingShips">
                 <div id="enemy-top-nav">
                   <div class="top-nav" ng-repeat="n in range(1,10)" ng-class="nightMode ? 'nightBorder' : ''">{{n}}</div>
                 </div>
@@ -111,6 +119,9 @@
                       <!-- {{translate(n.id + 1)}} -->{{n.id}}
                   </div>
                 </div>
+              </div>
+              <div class="col-md-6" ng-show="pickingShips" id="messages" ng-class="nightMode ? 'nightBorder' : ''">
+                <h4 ng-repeat="message in messages track by $index">{{message}}</h4>
               </div>
               <div class="col-md-6" id="yourSideBoard">
                 <div id="my-top-nav" class="pull-right">

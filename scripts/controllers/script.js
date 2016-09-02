@@ -1,5 +1,6 @@
-var app = angular.module("battleship", []);
-app.controller("myCtrl", function ($scope) {
+var app = angular.module("battleship", ['ui.bootstrap', 'ui.bootstrap.tpls']);
+
+app.controller("myCtrl", ['$scope', '$uibModal', '$rootScope', function ($scope, $uibModal, $rootScope) {
     var myChoices = [];
     $scope.myBoard = [];
     $scope.enemyBoard = [];
@@ -54,17 +55,30 @@ app.controller("myCtrl", function ($scope) {
     var color = 0;
 
     // Holds the information for each of the ships
-    var ships = {
+    $scope.ships = {
         "Aircraft Carrier": 5,
         "Battleship": 4,
         "Cruiser": 3,
         "Destroyer": 2,
-        "second Destroyer": 2,
+        "Second Destroyer": 2,
         "Submarine": 1,
-        "second Submarine": 1
+        "Second Submarine": 1
     }
 
-    $scope.num = Object.keys(ships).length;
+    $scope.enemyShips = {
+        "Aircraft Carrier": 5,
+        "Battleship": 4,
+        "Cruiser": 3,
+        "Destroyer": 2,
+        "Second Destroyer": 2,
+        "Submarine": 1,
+        "Second Submarine": 1
+    }
+
+    $scope.num = Object.keys($scope.ships).length;
+    const NUMBER_OF_SHIPS = $scope.num;
+
+    var modalInstance = null;
 
     // Make this variable true to see the enemy ships
     var testing = false;
@@ -87,8 +101,8 @@ app.controller("myCtrl", function ($scope) {
     
     // Picks random enemy locations
     $scope.initialize = function() {
-        for (var i = 0; i < Object.keys(ships).length; i++) { //Object.keys(ships).length
-            $scope.length = ships[Object.keys(ships)[i]];
+        for (var i = 0; i < Object.keys($scope.ships).length; i++) { //Object.keys(ships).length
+            $scope.length = $scope.ships[Object.keys($scope.ships)[i]];
             $scope.blocksLeft = $scope.length;
 
             var id = Math.floor((Math.random() * 100));
@@ -171,8 +185,8 @@ app.controller("myCtrl", function ($scope) {
     $scope.$watch('pickingShips && blocksLeft', function() {
         if ($scope.pickingShips && $scope.blocksLeft == 0) {
             currentShip++;
-            var name = Object.keys(ships)[currentShip];
-            $scope.length = parseInt(ships[name]);
+            var name = Object.keys($scope.ships)[currentShip];
+            $scope.length = parseInt($scope.ships[name]);
             $scope.blocksLeft = $scope.length;
             $scope.shipsLeft--;
             $scope.shipLocations = [];
@@ -444,23 +458,44 @@ app.controller("myCtrl", function ($scope) {
     }
 
     var removeFromLocations = function(whichLocation, id) {
-        for (var i = 0; i < $scope.num; i++) {
+        for (var i = 0; i < NUMBER_OF_SHIPS; i++) {
             if (whichLocation[i].length != 0) {
                 whichLocation[i] = whichLocation[i].filter(function(x) {return x != id});
                 if (whichLocation[i].length == 0) {
                     if (whichLocation == $scope.enemyLocations) {
                         $scope.playerHit++;
-                        addNewMessage("You sank my " + Object.keys(ships)[i] + "!");
+                        var message = "You sank the enemy's " + Object.keys($scope.ships)[i] + "!";
+                        createModal(message);
+                        document.getElementById("enemy-" + Object.keys($scope.enemyShips)[i]).className += " line-through";
                         return true;
                     } else if (whichLocation == $scope.myLocations) {
                         $scope.enemyHit++;
-                        addNewMessage("The enemy sank your " + Object.keys(ships)[i] + "!");
+                        var message = "The enemy sank your " + Object.keys($scope.ships)[i] + "!";
+                        createModal(message);
+                        document.getElementById("your-" + Object.keys($scope.ships)[i]).className += " line-through";
                         return true;
                     }
                 }
             }
         }
         return false;
+    }
+
+    var createModal = function(messages) {
+        modalInstance = $uibModal.open({
+            animationsEnabled: true,
+            templateUrl: 'views/modal.html',
+            controller: 'ModalInstanceCtrl',
+            size: "small",
+            resolve: {
+                message: function () {
+                    return messages;
+                },
+                num: function() {
+                    return NUMBER_OF_SHIPS;
+                }
+            }
+        }); 
     }
     
     // This function resets the whole game and is able to play again
@@ -491,7 +526,7 @@ app.controller("myCtrl", function ($scope) {
         $scope.started = false;
         $scope.guessedLocations = [];
         $scope.finished = false;
-        $scope.shipsLeft = $scope.num + 1;
+        $scope.shipsLeft = NUMBER_OF_SHIPS + 1;
         $scope.pickingShips = false;
         $scope.playerHit = 0;
         $scope.enemyHit = 0;
@@ -500,9 +535,18 @@ app.controller("myCtrl", function ($scope) {
         foundShip = [];
         $scope.message = "Restart!";
 
+        $rootScope.started = false;
+        $rootScope.yourTurn = false;
+        $rootScope.finished = false;
+
         for (var i = 0; i < 100; i++) {
             $scope.enemyBoard[i].backgroundColor = "dodgerblue";
             $scope.myBoard[i].backgroundColor = "dodgerblue";
+        }
+
+        for (var i = 0; i < NUMBER_OF_SHIPS; i++) {
+            document.getElementById("your-" + Object.keys($scope.ships)[i]).className = "ships-left";
+            document.getElementById("enemy-" + Object.keys($scope.enemyShips)[i]).className = "ships-left";
         }
 
         $scope.initialize();
@@ -563,8 +607,8 @@ app.controller("myCtrl", function ($scope) {
     // This method takes a message and adds it to the messages array. Also removes messages if there are too many
     var addNewMessage = function(message) {
         $scope.messages.unshift(message);
-        if ($scope.messages.length > 3) {
-            $scope.messages = $scope.messages.slice(0, 3);
+        if ($scope.messages.length > 18) {
+            $scope.messages = $scope.messages.slice(0, 18);
         }
     }
 
@@ -595,23 +639,38 @@ app.controller("myCtrl", function ($scope) {
     // This function is called when the enemy wins
     $scope.$watch('playerHit', function() {
        if ($scope.started) {
-           if ($scope.playerHit == $scope.num) {
+           if ($scope.playerHit == NUMBER_OF_SHIPS) {
                 addNewMessage("Congratulations! You won!");
                 $scope.started = false;
                 $scope.yourTurn = false;
                 $scope.finished = true;
+                $rootScope.started = false;
+                $rootScope.yourTurn = false;
+                $rootScope.finished = true;
+                $rootScope.playerHit = $scope.playerHit;
            };
         }
+    });
+
+    $scope.$on('RESTART', function() {
+        $scope.reset();
+    });
+
+    $scope.$on('HIDE_MODAL', function() {
+        modalInstance.close();
     });
 
     // This function is called when the user wins
     $scope.$watch('enemyHit', function() {
         if ($scope.started) {
-            if ($scope.enemyHit == $scope.num) {
+            if ($scope.enemyHit == NUMBER_OF_SHIPS) {
                 addNewMessage("You have lost!");
                 $scope.started = false;
                 $scope.yourTurn = false;
                 $scope.finished = true;
+                $rootScope.started = false;
+                $rootScope.yourTurn = false;
+                $rootScope.finished = true;
                 showUnfoundEnemyShips();
             }
         }
@@ -623,4 +682,4 @@ app.controller("myCtrl", function ($scope) {
             $scope.enemyBoard[block].backgroundColor = "black";
         }
     }
-});
+}]);

@@ -1,0 +1,7 @@
+<div class="modal-body" id="modal-body">
+  <h2 class="text-center">{{message}}</h2>
+  <div ng-show="!started && !yourTurn && finished" class="text-center">
+    <h2>You have {{playerHit == num ? 'won' : 'lost'}}!</h2>
+    <button class="btn btn-primary" role="button" ng-click="reset();" id="play-again-button">Play again?</button>
+  </div>
+</div>

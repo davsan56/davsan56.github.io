@@ -33,11 +33,31 @@
 }
 
 .score h4, h1 {
-    display: inline;
+    margin: 0;
+}
+
+.align-text {
+    vertical-align: middle;
+    display: table-cell;
+    height: 100px;
+}
+
+#user-ships-left {
+    padding-left: 10px;
+}
+
+.ships-left {
+    display: inline-block;
+    padding-right: 5px;
+}
+
+.line-through {
+    text-decoration: line-through;
+    color: green;
 }
 
 #info {
-    text-align: center;
+    /*text-align: center;*/
     height: 97px;
 }
 
@@ -49,22 +69,12 @@
     border: 0 !important;
 }
 
-#enemy-top-nav {
-    margin-left: 51px;
-}
-
-#enemy-side-nav {
-    width: 45px;
-}
-
 #gameBoard {
     padding-top: 5px;
     padding-bottom: 5px;
 }
 
 .top-nav {
-    height: 42px;
-    width: 42px;
     position: relative;
     display: inline-block;
     margin: 7px 0 0 7px;
@@ -80,13 +90,10 @@
 
 #my-side-nav {
     float: right;
-    width: 49px;
     padding-top: 3px;
 }
 
 .side-nav {
-    height: 42px;
-    width: 42px;
     display: block;
     margin: 7px 0 0 7px;
     border: 1px solid black; 
@@ -122,16 +129,12 @@
 }
 
 #yourBoard {
-    height: 500px;
-    width: 500px;
     border: 1px solid black;
     margin: 0;
     background-color: deepskyblue;
 }
 
 .myBox {
-    height: 42px;
-    width: 42px;
     background-color: gray;
     position: relative;
     display: inline-block;
@@ -141,6 +144,95 @@
     line-height: 2.6;
     color: white;
     cursor: pointer;
+}
+
+#play-again-button {
+    margin-top: 10px;
+}
+
+/* Desktops and laptops ----------- */
+@media only screen 
+and (min-width : 1224px) {
+    /* Styles */
+    #yourBoard {
+        height: 500px !important;
+        width: 500px !important;
+    }
+
+    #enemyBoard {
+        height: 500px !important;
+        width: 500px !important;
+    }
+
+    .myBox {
+        height: 42px !important;
+        width: 42px !important;
+    }
+
+    .enemyBox {
+        height: 42px !important;
+        width: 42px !important;
+    }
+
+    .top-nav {
+        height: 42px !important;
+        width: 42px !important;
+    }
+
+    .side-nav {
+        height: 42px !important;
+        width: 42px !important;
+    }
+
+    #enemy-side-nav {
+        width: 45px !important;
+    }
+
+    #enemy-top-nav {
+        margin-left: 51px;
+    }
+}
+
+/* Large screens ----------- */
+@media only screen 
+and (min-width : 1824px) {
+    #yourBoard {
+        height: 700px !important;
+        width: 700px !important;
+    }
+
+    #enemyBoard {
+        height: 700px !important;
+        width: 700px !important;
+    }
+
+    .myBox {
+        height: 62px !important;
+        width: 62px !important;
+    }
+
+    .enemyBox {
+        height: 62px !important;
+        width: 62px !important;
+    }
+
+    .top-nav {
+        height: 62px !important;
+        width: 62px !important;
+    }
+
+    .side-nav {
+        height: 62px !important;
+        width: 62px !important;
+    }
+
+    #enemy-side-nav {
+        width: 65px !important;
+    }
+
+    #enemy-top-nav {
+        margin-left: 71px;
+    }
 }
 
 #you {
