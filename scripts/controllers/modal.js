@@ -1,6 +1,7 @@
-app.controller("ModalInstanceCtrl", ["$scope", "message", "num", "$rootScope", function($scope, message, num, $rootScope) {
+app.controller("ModalInstanceCtrl", ["$scope", "message", "num", "$rootScope", "playerHit", function($scope, message, num, $rootScope, playerHit) {
     $scope.message = message;
     $scope.num = num;
+    $scope.playerHit = playerHit;
 
     $scope.reset = function() {
         $rootScope.$broadcast('RESTART');

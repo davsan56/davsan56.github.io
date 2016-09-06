@@ -498,6 +498,9 @@ app.controller("myCtrl", ['$scope', '$uibModal', '$rootScope', function ($scope,
                 },
                 num: function() {
                     return NUMBER_OF_SHIPS;
+                },
+                playerHit: function() {
+                    return $scope.playerHit;
                 }
             }
         }); 
@@ -606,6 +609,14 @@ app.controller("myCtrl", ['$scope', '$uibModal', '$rootScope', function ($scope,
                     board[id].backgroundColor = "dodgerblue";
         } else if (board == $scope.myBoard) {
             if ($scope.pickingShips) if (board[id].backgroundColor == "gray") board[id].backgroundColor = "dodgerblue";
+        }
+    }
+
+    $scope.changeMode = function() {
+        if (!$scope.started) {
+            $scope.easyMode = !$scope.easyMode;
+        } else {
+            $scope.createModal(false, "This mode can only be changed before a game has started");
         }
     }
 
