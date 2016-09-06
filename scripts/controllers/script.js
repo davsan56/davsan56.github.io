@@ -465,13 +465,13 @@ app.controller("myCtrl", ['$scope', '$uibModal', '$rootScope', function ($scope,
                     if (whichLocation == $scope.enemyLocations) {
                         $scope.playerHit++;
                         var message = "You sank the enemy's " + Object.keys($scope.ships)[i] + "!";
-                        createModal(message);
+                        $scope.createModal(false, message);
                         document.getElementById("enemy-" + Object.keys($scope.enemyShips)[i]).className += " line-through";
                         return true;
                     } else if (whichLocation == $scope.myLocations) {
                         $scope.enemyHit++;
                         var message = "The enemy sank your " + Object.keys($scope.ships)[i] + "!";
-                        createModal(message);
+                        $scope.createModal(false, message);
                         document.getElementById("your-" + Object.keys($scope.ships)[i]).className += " line-through";
                         return true;
                     }
@@ -481,10 +481,15 @@ app.controller("myCtrl", ['$scope', '$uibModal', '$rootScope', function ($scope,
         return false;
     }
 
-    var createModal = function(messages) {
+    $scope.createModal = function(help, messages) {
+        var template = "views/modal.html";
+        if (help) {
+            template = "views/helpModal.html";
+        }
+
         modalInstance = $uibModal.open({
             animationsEnabled: true,
-            templateUrl: 'views/modal.html',
+            templateUrl: template,
             controller: 'ModalInstanceCtrl',
             size: "small",
             resolve: {

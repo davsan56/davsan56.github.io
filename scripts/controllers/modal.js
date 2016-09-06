@@ -4,6 +4,10 @@ app.controller("ModalInstanceCtrl", ["$scope", "message", "num", "$rootScope", f
 
     $scope.reset = function() {
         $rootScope.$broadcast('RESTART');
-        $rootScope.$broadcast('HIDE_MODAL')
+        $rootScope.$broadcast('HIDE_MODAL');
+    }
+
+    $scope.closeModal = function() {
+        $rootScope.$broadcast('HIDE_MODAL');
     }
 }]);
