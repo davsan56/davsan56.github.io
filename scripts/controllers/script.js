@@ -54,6 +54,8 @@ app.controller("myCtrl", ['$scope', '$uibModal', '$rootScope', function ($scope,
 
     var color = 0;
 
+    var backLog = [];
+
     // Holds the information for each of the ships
     $scope.ships = {
         "Aircraft Carrier": 5,
@@ -295,6 +297,10 @@ app.controller("myCtrl", ['$scope', '$uibModal', '$rootScope', function ($scope,
     // This method choices a random location for the computer to pick
     // TODO: Add in some sort of logic so when the computer guesses a correct location, it guesses around the spot, randomly
     var computerGuess = function() {
+        if (backLog.length != 0 && foundShip.length == 0) {
+            foundShip.push(backLog.pop());
+        }
+
         if (foundShip.length == 0 || $scope.easyMode) {
             // take random guesses
             var x = Math.floor((Math.random() * 100));
@@ -322,14 +328,36 @@ app.controller("myCtrl", ['$scope', '$uibModal', '$rootScope', function ($scope,
                 // figure out what direction the ship is going and choose those
                 var first = foundShip[0];
                 var second = foundShip[1];
+                var horizontal = false;
 
                 if (Math.abs(first - second) < 10) {
                     // guess horizontally
                     possibleLocationFinding(foundShip, 1, true, false);
+                    horizontal = true;
                 } else {
                     // guess vertically
                     possibleLocationFinding(foundShip, 1, false, true);
+                    horizontal = false;
                 }
+
+                var temp = [];
+                for (var i = 0; i < $scope.possibleLocations.length; i++) {
+                    if ($scope.guessedLocations.indexOf($scope.possibleLocations[i]) == -1) {
+                        temp.push($scope.possibleLocations[i]);
+                    }
+                }
+
+                if (temp.length == 0) {
+                    $scope.possibleLocations = [];
+                    backLog = foundShip.splice(1);
+                    var x = foundShip[0];
+                    foundShip = [];
+                    foundShip.push(x);
+                    if (horizontal) // guess vertically now
+                        possibleLocationFinding(foundShip, 1, false, true);
+                    else // guess horizontally now
+                        possibleLocationFinding(foundShip, 1, true, false);
+                }   
 
                 updateScreen();
             }
@@ -542,6 +570,7 @@ app.controller("myCtrl", ['$scope', '$uibModal', '$rootScope', function ($scope,
         color = 0;
         foundShip = [];
         $scope.message = "Restart!";
+        backLog = [];
 
         $rootScope.started = false;
         $rootScope.yourTurn = false;

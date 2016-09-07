@@ -121,7 +121,7 @@
                 </div>
                 <div id="enemyBoard">
                   <div ng-repeat="n in enemyBoard track by n.id" ng-mouseenter="hover($event, enemyBoard)" ng-mouseleave="exit($event, enemyBoard)" style="background-color: {{n.backgroundColor}}" class="enemyBox" id="{{n.id}}" ng-click="myGuess($event)">
-                      <!-- {{translate(n.id + 1)}} -->{{n.id}}
+                      {{translate(n.id + 1)}}
                   </div>
                 </div>
               </div>
@@ -134,7 +134,7 @@
                 </div>
                 <div id="yourBoard" class="pull-right">
                   <div ng-repeat="n in myBoard track by n.id" ng-mouseenter="hover($event, myBoard)" ng-mouseleave="exit($event, myBoard)" style="background-color: {{n.backgroundColor}}" class="myBox" id="{{n.id}}" ng-click="assign($event)">
-                      <!-- {{translate(n.id + 1)}} -->{{n.id}}
+                      {{translate(n.id + 1)}}
                   </div>
                 </div>
                 <div id="my-side-nav">
